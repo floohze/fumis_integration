@@ -1,8 +1,8 @@
 """Sensors for Austroflamm Mo Duo."""
 from __future__ import annotations
 
-from homeassistant.components.sensor import SensorEntity, SensorDeviceClass, SensorStateClass
-from homeassistant.const import PERCENTAGE, UnitOfTemperature, UnitOfPower, UnitOfTime
+from homeassistant.components.sensor import SensorEntity, SensorDeviceClass
+from homeassistant.const import UnitOfTemperature, UnitOfPower
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN, MANUFACTURER, MODEL, estimated_pellet_rate_kg_h
