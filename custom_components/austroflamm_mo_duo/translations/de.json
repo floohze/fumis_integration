@@ -1,0 +1,21 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Austroflamm Mo Duo",
+        "description": "Verbindung mit dem Fumis-Cloud-Dienst herstellen.",
+        "data": {
+          "name": "Gerätename",
+          "mac": "Fumis-MAC-Adresse",
+          "password": "Fumis-Passwort / PIN"
+        }
+      }
+    },
+    "error": {
+      "invalid_mac": "Bitte eine MAC-Adresse mit 12 Zeichen eingeben."
+    },
+    "abort": {
+      "already_configured": "Dieses Fumis-Gerät ist bereits eingerichtet."
+    }
+  }
+}
