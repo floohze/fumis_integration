@@ -1,0 +1,10 @@
+{
+  "domain": "austroflamm_mo_duo",
+  "name": "Austroflamm Mo Duo",
+  "codeowners": [],
+  "config_flow": true,
+  "documentation": "https://github.com/floohze/fumis_integration",
+  "iot_class": "cloud_polling",
+  "requirements": [],
+  "version": "0.1.0"
+}

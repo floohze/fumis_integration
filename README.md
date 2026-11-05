@@ -1,61 +1,64 @@
-[![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
-[![hacs_badge](https://github.com/maheus/fumis_integration/actions/workflows/hassfest.yaml/badge.svg)](https://github.com/maheus/fumis_integration/actions/)
-# Fumis integration for Home Assistant
+# Austroflamm Mo Duo – Home Assistant custom integration
 
-This is a _custom component_ for [Home Assistant](https://www.home-assistant.io/).
+This repository contains two separate integrations:
 
-This integration using a modified lib [python-fumis](https://github.com/frenck/python-fumis).
+- `fumis`: the original Fumis integration, kept in its existing folder.
+- `austroflamm_mo_duo`: a separate, read-only first development version for the Austroflamm Mo Duo.
 
-The Fumis integration allows you to control and get stoves informations who use the api fumis (https://api.fumis.si).
+The new integration uses its own Home Assistant domain (`austroflamm_mo_duo`). It does not overwrite or replace the existing `fumis` integration.
 
-### HACS
+## Development status
 
-HACS > Custom repositories
-HACS > Integrations > Explore & Add Repositories > Fumis > Install this repository
+**Early development / testing required.** The integration currently connects to the Fumis cloud API and exposes status values that are already understood from the existing Fumis implementation.
 
-### Manually
+Included so far:
 
-Copy `custom_components/fumis` in `config/custom_components` of your Home Assistant and restart HA.
+- Fumis cloud connection using the device MAC address and password/PIN
+- Room and combustion-chamber temperature, where reported
+- Current power value, fan RPM and pressure, where reported
+- Fumis counters and fuel fields, kept without guessed units where the unit is not confirmed
+- Operating-state binary sensor
+- Sanitized Home Assistant diagnostics
 
-## Configuration
+Not implemented yet:
 
-Adding integration with HA ui (configuration -> integrations -> add integration -> search fumis).
+- Weekly schedules (weekday, Saturday and Sunday profiles)
+- External room-temperature sensor selection
+- Wood-mode power selection
+- Manual fan control
+- Reliable measured pellet consumption / service-menu extraction
 
-## known problems
+**Safety:** No fan, combustion, auger or diagnostic parameter write commands are sent by this development integration. Do not use undocumented parameter IDs for testing. Control functions will only be added after the protocol and safe operating ranges have been verified.
 
-For one HETA green 200, if you deactivate the ecomode, then you must activate the possibility of accessing this menu.
-For reactivate that:
-```
-curl -d '{"unit": {"id": "YOUR_MAC", "type": 0, "pin": "YOUR_PASSWORD"},"controller": {"diagnostic": {"parameters": [{"id": 53, "value": 1}]}} ,"apiVersion": "1"}' -H  "Accept: application/json" -H 'appname: mtest' -H 'User-Agent: mtest' -H 'username: YOUR_MAC' -H 'password: YOUR_PASSWORD'  -X POST 'https://api.fumis.si/v1/status/'
-```
+## Provisional pellet estimate
 
-## Contributors
+The device owner supplied a pellet heating value of **4.9 kWh/kg** and the following nominal power levels:
 
-For a full list of all authors and contributors,
-check [the contributor's page](https://github.com/maheus/fumis_integration/graphs/contributors).
+| Level | Nominal power |
+|---:|---:|
+| 1 | 1.9 kW |
+| 2 | 3.8 kW |
+| 3 | 5.7 kW |
+| 4 | 7.6 kW |
+| 5 | 9.5 kW |
 
-### Thanks to:
-[@Aohzan](https://github.com/Aohzan): for your help and disponibility
+The integration contains a provisional calculation of `kW / 4.9` kg/h, but only when the API's current-power field reports a level from 1 to 5. This is an estimate, **not a measured fuel-consumption value**. It is valid as written only if the supplied kW figures represent fuel-input power. If they are useful heat output, the stove efficiency must also be included. The units and meaning of the API's `actualPower` field still need confirmation.
 
-## Licence
-MIT License
+## Installation for development
 
-Copyright (c) [2022] [Mlehoux]
+1. In HACS, add this repository as a custom repository of category **Integration**.
+2. Install the **Austroflamm Mo Duo** integration if HACS offers it.
+3. Restart Home Assistant.
+4. Open **Settings → Devices & services → Add integration**.
+5. Search for **Austroflamm Mo Duo**.
+6. Enter the Fumis MAC address and password/PIN.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+If HACS does not detect the nested integration from this repository layout, install the folder `custom_components/austroflamm_mo_duo` manually into the matching directory in your Home Assistant configuration and restart.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+## Diagnostics for further development
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+The integration provides a diagnostics download with the MAC address and password/PIN redacted. If you share diagnostics or API responses for protocol analysis, inspect the file first and remove any remaining personal or network information.
+
+## Existing Fumis integration
+
+The original `custom_components/fumis` folder remains present and is not replaced by this new integration.

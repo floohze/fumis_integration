@@ -1,0 +1,21 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Austroflamm Mo Duo",
+        "description": "Connect to the Fumis cloud service.",
+        "data": {
+          "name": "Device name",
+          "mac": "Fumis MAC address",
+          "password": "Fumis password / PIN"
+        }
+      }
+    },
+    "error": {
+      "invalid_mac": "Enter a 12-character MAC address."
+    },
+    "abort": {
+      "already_configured": "This Fumis device is already configured."
+    }
+  }
+}
