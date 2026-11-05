@@ -29,10 +29,6 @@ class MoDuoCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
     async def _async_update_data(self) -> dict[str, Any]:
         """Fetch status from the Fumis cloud API."""
-        payload = {
-            "unit": {"id": self.mac, "type": 0, "pin": self.password},
-            "apiVersion": "1",
-        }
         try:
             async with asyncio.timeout(20):
                 async with self.session.get(
@@ -44,7 +40,6 @@ class MoDuoCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                         "User-Agent": "HomeAssistant-AustroflammMoDuo/0.1.0",
                         "username": self.mac,
                     },
-                    json=payload,
                 ) as response:
                     response.raise_for_status()
                     raw = await response.json()
